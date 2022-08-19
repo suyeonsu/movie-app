@@ -12,6 +12,7 @@ import RegisterPage from './views/RegisterPage/RegisterPage'
 import MovieDetail from './views/MovieDetail/MovieDetail';
 import FavoritePage from './views/FavoritePage/FavoritePage';
 import NavBar from './views/NavBar/NavBar';
+import Footer from './views/Footer/Footer';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/favorite" element = {<FavoritePage />} />
         </Routes>
       </div>
+      <Footer/>
     </Router>
   );
 }
