@@ -1,46 +1,38 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { auth } from '../_actions/user_action';
+/* eslint-disable react-hooks/exhaustive-deps */
+ import React, { useEffect } from 'react';
+ import { Auth } from '../_actions/user_action';
+ import { useSelector, useDispatch } from "react-redux";
 
-export default function (SpecificComponent, option, adminRoute = null) {
+ export default function (ComposedClass, reload, adminRoute = null) {
+     function AuthenticationCheck(props) {
 
-    // option ?
-    // null => 아무나 출입 가능한 페이지
-    // true => 로그인 유저만 출입 가능한 페이지
-    // false => 로그인한 유저는 출입 불가능한 페이지
+         let user = useSelector(state => state.user);
+         const dispatch = useDispatch();
 
-    function AuthenticationCheck() {
+         useEffect(() => {
 
-        // 서버에 request를 전송해 token을 받아 처리
-        
-        const dispatch = useDispatch();
-        const navigate = useNavigate();
+             dispatch(Auth()).then(response => {
+                 if (!response.payload.isAuth) {
+                     if (reload) {
+                         props.history.push('/login')
+                     }
+                 } else {
+                     if (adminRoute && !response.payload.isAdmin) {
+                         props.history.push('/')
+                     }
+                     else {
+                         if (reload === false) {
+                             props.history.push('/')
+                         }
+                     }
+                 }
+             })
 
-        useEffect(() => {
-            dispatch(auth()).then(response => {
+         }, [])
 
-                // 로그인 하지 않은 상태
-                if(!response.payload.isAuth) {
-                    if(option) {
-                        navigate('/login')
-                    }
-                } else { 
-                    // 로그인 한 상태
-                    if(adminRoute && !response.payload.isAdmin) {
-                        // admin 페이지에 들어가려 할 경우
-                        navigate('/')
-                    } else {
-                        if(option === false)
-                            navigate('/')
-                    }
-                }
-            })
-        }, [])
-
-        return (
-            <SpecificComponent/>
-        )
-    }
-    return AuthenticationCheck
-}
+         return (
+             <ComposedClass {...props} user={user} />
+         )
+     }
+     return AuthenticationCheck
+ }
