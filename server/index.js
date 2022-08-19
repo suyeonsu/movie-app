@@ -1,6 +1,4 @@
 const express = require('express')
-const req = require('express/lib/request')
-const res = require('express/lib/response')
 const app = express()
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -12,15 +10,14 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
+app.use('/api/users', require('./routes/users'))
+app.use('/api/favorite', require('./routes/favorite'))
+
 const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI, {
   useNewUrlParser: true, useUnifiedTopology: true
 }).then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err))
-
-app.get('/', (req, res) => res.send('Hello World! 안녕하시렵니까-?'))
-
-app.get('/api/hello', (req, res) => res.send("hi hi~~"))
 
 // 회원가입 route
 // client에서 가져온 정보를 db에 넣는다

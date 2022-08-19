@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config'
-import MainImage from '../LandingPage/Sections/MainImage'
-import MovieInfo from './Sections/MovieInfo'
-import GridCards from "../commons/GridCards";
 import { Row } from 'antd'
+
+import { API_URL, API_KEY, IMAGE_BASE_URL } from '../../Config'
+import MovieInfo from './Sections/MovieInfo'
+import MainImage from '../../views/LandingPage/Sections/MainImage'
+import GridCards from "../commons/GridCards"
+import Favorite from './Sections/Favorite'
 
 function MovieDetail() {
     
@@ -45,9 +47,15 @@ function MovieDetail() {
                 title={Movie.original_title}
                 text={Movie.overview}
             />
+            
 
             {/* Body */}
             <div style={{ width: '85%', margin: '1rem auto' }}>
+
+                {/* Favorite button */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem('userId')} />
+                </div>
 
                 {/* Movie Info */}
                 <MovieInfo
